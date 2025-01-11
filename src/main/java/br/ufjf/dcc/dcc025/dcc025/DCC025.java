@@ -12,8 +12,6 @@ public class DCC025
 {
     public static void main(String[] args) 
     {
-        System.out.println("Hello World!");
-        
         try
         {
             MenuInicial menu = new MenuInicial();

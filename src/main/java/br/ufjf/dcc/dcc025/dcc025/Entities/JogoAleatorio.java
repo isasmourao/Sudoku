@@ -1,5 +1,6 @@
 package br.ufjf.dcc.dcc025.dcc025.Entities;
 
+import br.ufjf.dcc.dcc025.dcc025.Constants.Constants;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -29,22 +30,51 @@ public class JogoAleatorio extends JogoSudoku
     
     private int quantidadeNumerosUsuarioDesejaSortear(Scanner scanner) 
     {
-        gerarMensagemNumerosParaSortear();
-        int numerosParaSortear = scanner.nextInt();
-        if (!numerosParaSortearEhValido(numerosParaSortear))
-            throw new IllegalArgumentException("O número digitado para sortear é inválido!");
-        
-        return numerosParaSortear;
+        System.out.println("""
+                ===================================================
+                CRIANDO O JOGO""");
+       
+        int tentativas = 0;
+        try
+        {
+            while (tentativas < Constants.MAX_TENTATIVAS) 
+            {
+                gerarMensagemNumerosParaSortear();
+                int numerosParaSortear = scanner.nextInt();
+
+                if (numerosParaSortearEhValido(numerosParaSortear)) 
+                {
+                    return numerosParaSortear;
+                } 
+                else 
+                {
+                    tentativas++;
+                    System.out.println("O número digitado para sortear é inválido!");
+                    if (tentativas < Constants.MAX_TENTATIVAS)
+                    {
+                        System.out.println("Tente novamente."); 
+                        System.out.print(">> ");
+                    }                                        
+                }
+            }
+            throw new IllegalStateException("Número máximo de tentativas atingido. Não foi possível obter um valor válido.");
+        }
+        catch (IllegalStateException e) 
+        {
+            throw e;
+        } 
+        catch (Exception e) 
+        {
+            throw e;
+        }     
     }
     
     private void gerarMensagemNumerosParaSortear()
     {
         System.out.println("""
-                        ===================================================
-                        Criando o jogo...
-
-                        - Quantos números deseja sortear?
+                        Quantos números deseja sortear?
                         """);
+        System.out.print(">> ");
     }
     
     private boolean numerosParaSortearEhValido(int numerosParaSortear)
@@ -66,7 +96,7 @@ public class JogoAleatorio extends JogoSudoku
             if (tabuleiro[linha][coluna] == 0 && podeInserirNumero(linha, coluna, numero)) 
             {
                 tabuleiro[linha][coluna] = numero;
-                origemValores[linha][coluna] = "automatico"; // só vou poder remover os manuais
+                origemValores[linha][coluna] = "automaticamente"; // só vou poder remover os manuais
                 preenchidos++;
             }
         }

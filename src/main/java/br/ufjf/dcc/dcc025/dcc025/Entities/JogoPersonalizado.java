@@ -16,7 +16,8 @@ public class JogoPersonalizado extends JogoSudoku
         {
             while (true) 
             {
-                System.out.println("Insira os valores no formato (linha,coluna,valor) ou (-1,-1,-1) para sair:");
+                System.out.println("Insira os valores no formato (linha,coluna,valor) ou (-1,-1,-1) para sair");
+                System.out.print(">> ");
                 String valorParaInserir = scanner.nextLine();
 
                 if (valorParaInserir.trim().equals("(-1,-1,-1)")) 
@@ -47,15 +48,15 @@ public class JogoPersonalizado extends JogoSudoku
                     for (int tentativa = 0; tentativa < maximoTentativas; tentativa++) {
                         if (!valoresSaoValidos(linha, coluna, valor)) 
                         {
-                            System.out.println("Valores inválidos. Insira novamente:");
+                            System.out.println("Valores inválidos. Insira novamente");
+                            System.out.print(">> ");
                             valorParaInserir = scanner.nextLine();
 
                             if (valorParaInserir.trim().equals("(-1,-1,-1)")) {
                                 System.out.println(" ## Código de parada inserido ##");
                                 return;
                             }
-
-                            // Atualiza os valores com a nova entrada
+                           
                             posicao = valorParaInserir.replace("(", "").replace(")", "");
                             valores = posicao.split(",");
                             if (valores.length != 3) {
@@ -67,7 +68,7 @@ public class JogoPersonalizado extends JogoSudoku
                             linha = indicesAjustados[0];
                             coluna = indicesAjustados[1];
                             valor = indicesAjustados[2];
-                            continue; // Recomeça a tentativa
+                            continue; // recomeça a tentativa
                         }
 
                         if (ehPossivelInserir(linha, coluna, valor)) 
@@ -76,7 +77,7 @@ public class JogoPersonalizado extends JogoSudoku
                             System.out.printf("Valor %d inserido na posição (%d,%d) com sucesso.%n", valor, linha + 1, coluna + 1);
                             origemValores[linha][coluna] = "automatico"; // não posso remover eles
                             insercaoBemSucedida = true;
-                            break; // Sai do loop de tentativas
+                            break; // fim do loop
                         } 
                         else 
                         {
@@ -143,11 +144,6 @@ public class JogoPersonalizado extends JogoSudoku
         return tabuleiro[linha][coluna] == 0;
     }
     
-    private boolean ehPossivelInserir(int linha, int coluna, int valor)
-    {
-        return tabuleiro[linha][coluna] == 0 && podeInserirNumero(linha, coluna, valor);
-    }
-
     @Override
     public void IniciarJogo() 
     {

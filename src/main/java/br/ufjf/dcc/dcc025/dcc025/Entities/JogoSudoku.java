@@ -1,5 +1,6 @@
 package br.ufjf.dcc.dcc025.dcc025.Entities;
 
+import br.ufjf.dcc.dcc025.dcc025.Constants.Constants;
 import static br.ufjf.dcc.dcc025.dcc025.Constants.Constants.TAMANHO;
 import br.ufjf.dcc.dcc025.dcc025.Entities.Interfaces.Jogo;
 import java.util.Scanner;
@@ -11,49 +12,15 @@ public abstract class JogoSudoku implements Jogo {
  
     protected boolean podeInserirNumero(int linha, int coluna, int numero) 
     {
-        return !existeNumeroNaLinha(linha, numero) &&
-               !existeNumeroNaColuna(coluna, numero) &&
-               !existeNumeroNoQuadrado(linha, coluna, numero);
-    }
-
-    private boolean existeNumeroNaLinha(int linha, int numero) 
-    {
-        for (int coluna = 0; coluna < 9; coluna++) 
-        {
-            if (tabuleiro[linha][coluna] == numero)            
-                return true;           
-        }
-        return false;
-    }
-   
-    private boolean existeNumeroNaColuna(int coluna, int numero) 
-    {
-        for (int linha = 0; linha < 9; linha++) 
-        {
-            if (tabuleiro[linha][coluna] == numero)            
-                return true;          
-        }
-        return false;
-    }
-
-    private boolean existeNumeroNoQuadrado(int linha, int coluna, int numero) 
-    {
-        int inicioLinha = (linha / 3) * 3;
-        int inicioColuna = (coluna / 3) * 3;
-
-        for (int lin = inicioLinha; lin < inicioLinha + 3; lin++) 
-        {
-            for (int col = inicioColuna; col < inicioColuna + 3; col++) 
-            {
-                if (tabuleiro[lin][col] == numero)                
-                    return true;               
-            }
-        }
-        return false;
+        return ehPossivelInserirNumero(linha, coluna, numero);
     }
 
     protected void imprimirTabuleiro() 
     {
+        System.out.println("""
+                           ===================================================
+                           TABULEIRO ATUALIZADO                          
+                           """);
         for (int[] linha : tabuleiro) 
         {
             for (int numero : linha)             
@@ -63,189 +30,6 @@ public abstract class JogoSudoku implements Jogo {
         }
     }
     
-    protected void adicionarJogada(String jogada) 
-    {
-        // Verifica o formato da jogada
-        if (!jogada.matches("\\(\\d{1},\\d{1},\\d{1}\\)")) 
-        {
-            System.out.println("Formato inválido! A entrada deve ser no formato (linha,coluna,valor) sem espaços.");
-            return;
-        }
-
-        // Limpa os parênteses e divide a string em componentes
-        jogada = jogada.replace("(", "").replace(")", "");
-        String[] valores = jogada.split(",");
-
-        // Converte para inteiros
-        int linha = Integer.parseInt(valores[0]) - 1; // Ajuste para índice 0
-        int coluna = Integer.parseInt(valores[1]) - 1; // Ajuste para índice 0
-        int valor = Integer.parseInt(valores[2]);
-
-        // Validação dos dados
-        if (linha < 0 || linha >= 9 || coluna < 0 || coluna >= 9 || valor < 1 || valor > 9) {
-            System.out.println("Valores fora do intervalo! A linha e a coluna devem ser entre 1 e 9, e o valor entre 1 e 9.");
-            return;
-        }
-
-        // Verifica se a posição já está preenchida
-        if (tabuleiro[linha][coluna] != 0) {
-            System.out.printf("A entrada (%d,%d,%d) não foi inserida, pois já possui um valor atribuído.%n", linha + 1, coluna + 1, valor);
-            return;
-        }
-
-        // Insere o valor no tabuleiro
-        tabuleiro[linha][coluna] = valor;
-        System.out.printf("Valor %d inserido na posição (%d,%d).%n", valor, linha + 1, coluna + 1);
-        
-        imprimirTabuleiro();
-    }
-
-    public boolean jogoEstaCompleto()
-    {
-        for (int i = 0; i < 9; i++) 
-        {
-            for (int j = 0; j < 9; j++) 
-            {
-                if (tabuleiro[i][j] == 0) 
-                    return false; // se encontrar um 0, o jogo não terminou
-            }
-        }
-        return true;
-    }
-    
-    public void gerarMensagemJogoCompleto()
-    {
-        System.out.println("""
-                           ===================================================
-                                            JOGO COMPLETO!
-                           ===================================================
-                           """);
-    }
-    
-    protected void removerJogada(String posicao) 
-    {
-        String[] partes = posicao.replace("(", "").replace(")", "").split(",");
-        int linha = Integer.parseInt(partes[0]) - 1; 
-        int coluna = Integer.parseInt(partes[1]) - 1; 
-        
-        if (linha >= 0 && linha < 9 && coluna >= 0 && coluna < 9) {
-            // Checa se o valor foi inserido automaticamente ou manualmente
-            if (origemValores[linha][coluna] != null && origemValores[linha][coluna].equals("automatico")) {
-                System.out.println("Não é possível remover o valor inserido automaticamente ou manualmente.");
-            } 
-            else 
-            {
-                tabuleiro[linha][coluna] = 0; 
-                origemValores[linha][coluna] = null;
-                System.out.println("Jogada removida da posição (" + (linha+1) + "," + (coluna+1) + ")");
-            }
-        } 
-        else 
-        {
-            System.out.println("Posição inválida.");
-        }   
-    }
-
-    public String verificarJogo() 
-    {
-        StringBuilder relatorio = new StringBuilder();
-        boolean jogoValido = true;
-
-        // Verificar linhas
-        for (int i = 0; i < 9; i++) 
-        {
-            if (!verificarLinha(i)) 
-            {
-                jogoValido = false;
-                relatorio.append(String.format("A linha %d contém números duplicados ou inválidos.%n", i + 1));
-            }
-        }
-
-        // Verificar colunas
-        for (int j = 0; j < 9; j++) 
-        {
-            if (!verificarColuna(j)) 
-            {
-                jogoValido = false;
-                relatorio.append(String.format("A coluna %d contém números duplicados ou inválidos.%n", j + 1));
-            }
-        }
-
-        // Verificar subgrades 3x3
-        for (int linha = 0; linha < 9; linha += 3) 
-        {
-            for (int coluna = 0; coluna < 9; coluna += 3) 
-            {
-                if (!verificarSubgrade(linha, coluna)) 
-                {
-                    jogoValido = false;
-                    relatorio.append(String.format(
-                            "A subgrade começando na posição (%d,%d) contém números duplicados ou inválidos.%n",
-                            linha + 1, coluna + 1));
-                }
-            }
-        }
-
-        if (jogoValido) 
-        {
-            return "O jogo está correto até o momento.";
-        } 
-        else 
-        {
-            return relatorio.toString();
-        }
-    }
-
-    private boolean verificarLinha(int linha) 
-    {
-        boolean[] numeros = new boolean[9];
-        for (int j = 0; j < 9; j++) 
-        {
-            int valor = tabuleiro[linha][j];
-            if (valor < 1 || valor > 9) continue; // Ignora células vazias
-            if (numeros[valor - 1]) 
-            {
-                return false; // Número duplicado encontrado
-            }
-            numeros[valor - 1] = true;
-        }
-        return true;
-    }
-
-    private boolean verificarColuna(int coluna) 
-    {
-        boolean[] numeros = new boolean[9];
-        for (int i = 0; i < 9; i++) 
-        {
-            int valor = tabuleiro[i][coluna];
-            if (valor < 1 || valor > 9) continue; // Ignora células vazias
-            if (numeros[valor - 1])           
-                return false; // Número duplicado encontrado
-            
-            numeros[valor - 1] = true;
-        }
-        return true;
-    }
-
-    private boolean verificarSubgrade(int linhaInicio, int colunaInicio) 
-    {
-        boolean[] numeros = new boolean[9];
-        for (int i = 0; i < 3; i++) 
-        {
-            for (int j = 0; j < 3; j++) 
-            {
-                int valor = tabuleiro[linhaInicio + i][colunaInicio + j];
-                if (valor < 1 || valor > 9) continue; // Ignora células vazias
-                if (numeros[valor - 1]) 
-                {
-                    return false; // Número duplicado encontrado
-                }
-                numeros[valor - 1] = true;
-            }
-        }
-        return true;
-    }
-  
     public void iniciarJogo() 
     {
         Scanner scanner = new Scanner(System.in);
@@ -304,110 +88,417 @@ public abstract class JogoSudoku implements Jogo {
         }
     }
     
-    private void gerarMensagemIniciandoJogo()
+    // <editor-fold desc="Métodos Auxiliares">
+    // verifica se o número é único na linha, coluna e no quadrado 3x3
+    private boolean verificarSeNumeroEhUnico(int linha, int coluna, int numero) 
+    {
+        for (int i = 0; i < TAMANHO; i++) 
+        {
+            if (tabuleiro[linha][i] == numero || tabuleiro[i][coluna] == numero)                 
+                return false;               
+        }
+
+        int inicioLinha = (linha / 3) * 3;
+        int inicioColuna = (coluna / 3) * 3;
+        for (int lin = inicioLinha; lin < inicioLinha + 3; lin++) 
+        {
+            for (int col = inicioColuna; col < inicioColuna + 3; col++) 
+            {
+                if (tabuleiro[lin][col] == numero)                
+                    return false;                
+            }
+        }
+        return true;
+    }
+
+    public boolean jogoEstaCompleto()
+    {
+        for (int i = 0; i < 9; i++) 
+        {
+            for (int j = 0; j < 9; j++) 
+            {
+                if (tabuleiro[i][j] == 0) 
+                    return false; // se encontrar um 0, o jogo não terminou
+            }
+        }
+        return true;
+    }
+    
+    public void gerarMensagemJogoCompleto()
     {
         System.out.println("""
+                           ===================================================
+                                            JOGO COMPLETO!
+                           ===================================================
+                           """);
+    }
+    
+    private boolean verificarLinha(int linha) 
+    {
+        boolean[] numeros = new boolean[9];
+        for (int j = 0; j < 9; j++) 
+        {
+            int valor = tabuleiro[linha][j];
+            if (valor < 1 || valor > 9) continue; 
+            if (numeros[valor - 1])            
+                return false;
+            
+            numeros[valor - 1] = true;
+        }
+        return true;
+    }
+
+    private boolean verificarColuna(int coluna) 
+    {
+        boolean[] numeros = new boolean[9];
+        for (int i = 0; i < 9; i++) 
+        {
+            int valor = tabuleiro[i][coluna];
+            if (valor < 1 || valor > 9) continue; // ignora o 0
+            if (numeros[valor - 1])           
+                return false; // sem número duplicado
+            
+            numeros[valor - 1] = true;
+        }
+        return true;
+    }
+
+    private boolean verificarSubgrade(int linhaInicio, int colunaInicio) 
+    {
+        boolean[] numeros = new boolean[9];
+        for (int i = 0; i < 3; i++) 
+        {
+            for (int j = 0; j < 3; j++) 
+            {
+                int valor = tabuleiro[linhaInicio + i][colunaInicio + j];
+                if (valor < 1 || valor > 9) continue;
+                if (numeros[valor - 1])                
+                    return false;
+                
+                numeros[valor - 1] = true;
+            }
+        }
+        return true;
+    }
+    
+    private void gerarMensagemIniciandoJogo()
+    {
+        System.out.print("""
                 ===================================================
-                Iniciando o jogo...
-                ===================================================
+                                INICIANDO O JOGO          
                 """);
     }
     
+    protected boolean ehPossivelInserir(int linha, int coluna, int valor) 
+    {
+        for (int i = 0; i < TAMANHO; i++) 
+        {
+            if (tabuleiro[linha][i] == valor || tabuleiro[i][coluna] == valor)            
+                return false;            
+        }
+
+        int linhaInicio = (linha / 3) * 3;
+        int colunaInicio = (coluna / 3) * 3;
+        for (int i = 0; i < 3; i++) 
+        {
+            for (int j = 0; j < 3; j++) 
+            {
+                if (tabuleiro[linhaInicio + i][colunaInicio + j] == valor)                
+                    return false;               
+            }
+        }
+        return true;
+    }
+    
+    protected boolean ehPossivelInserirNumero(int linha, int coluna, int valor) 
+    {
+        return tabuleiro[linha][coluna] == 0 && verificarSeNumeroEhUnico(linha, coluna, valor);
+    }
+    
+    private boolean estaDentroDosLimites(int linha, int coluna, int valor)
+    {
+        return linha < 1 || linha > 9 || coluna < 1 || coluna > 9 || valor < 1 || valor > 9;
+    }
+    
+    private boolean estaDentroDosLimites(int linha, int coluna)
+    {
+        return linha < 1 || linha > 9 || coluna < 1 || coluna > 9;
+    }
+    
+    private boolean posicaoEstaPreenchida(int linha, int coluna)
+    {
+        return tabuleiro[linha][coluna] != 0;
+    }
+    
+    private void inserirValorTabuleiro(int linha, int coluna, int valor)
+    {
+        tabuleiro[linha][coluna] = valor;
+        System.out.printf("Valor %d inserido na posição (%d,%d).%n", valor, linha + 1, coluna + 1);
+    }
+    
+    private int[] posicaoEhValida(String posicao) 
+    {
+        try 
+        {
+            int maximoTentativas = Constants.MAX_TENTATIVAS;
+            for (int tentativa = 0; tentativa <= maximoTentativas; tentativa++)
+            {
+                String[] valores = posicao.replace("(", "").replace(")", "").split(",");
+                if (valores.length != 2 && tentativa == maximoTentativas)               
+                    throw new IllegalArgumentException("Formato inválido. Use o formato (linha,coluna).\nExemplo: (3,4)");
+                
+                int linha = Integer.parseInt(valores[0].trim()) - 1;
+                int coluna = Integer.parseInt(valores[1].trim()) - 1;
+
+                if ((linha < 0 || linha >= TAMANHO || coluna < 0 || coluna >= TAMANHO)
+                                && tentativa == maximoTentativas)               
+                    throw new IllegalArgumentException("Posição fora dos limites do tabuleiro. Valores devem estar entre 1 e 9.");
+                
+                return new int[]{linha, coluna};
+            }
+            throw new IllegalArgumentException("Número máximo de tentativas atingido. Formato inválido ou posição fora dos limites.");
+        } 
+        catch (IllegalArgumentException e)
+        {
+            throw e;
+        }
+    }
+    
+    private String obterValoresPossiveis(int linha, int coluna) 
+    {
+        StringBuilder valoresPossiveis = new StringBuilder();
+
+        for (int valor = 1; valor <= TAMANHO; valor++)
+        {
+            if (ehPossivelInserir(linha, coluna, valor)) 
+            {
+                if (valoresPossiveis.length() > 0)                 
+                    valoresPossiveis.append(", ");
+                
+                valoresPossiveis.append(valor);
+            }
+        }
+        return valoresPossiveis.toString();
+    }
+    
+    private void removerJogada(int linha, int coluna)
+    {
+        tabuleiro[linha - 1][coluna - 1] = 0; 
+        origemValores[linha - 1][coluna - 1] = null; 
+        System.out.printf("Jogada removida da posição (%d,%d).%n", linha, coluna);
+    }
+    // </editor-fold>
+    
+    // <editor-fold desc="Métodos Menu">
     private void mostrarMenu() 
     {
         System.out.println("""
                            ===================================================
-                           Menu de jogadas! Selecione uma opção:
+                                       X=X=X MENU DE JOGO X=X=X
+                           ==> Selecione uma opção:
                            
                            1. Adicionar jogada.
                            2. Remover jogada.
                            3. Verificar.
                            4. Dica.
-                           5. Sair.
-                           ===================================================
+                           5. Sair.                           
                            """);   
+        System.out.print(">> ");
     }
     
-    protected String darDica(String posicao) {
-        if (posicao == null || posicao.isBlank()) {
-            return "Posição inválida. Use o formato (linha,coluna).";
+    protected void removerJogada(String posicoes) 
+    {
+        int maximoTentativas = Constants.MAX_TENTATIVAS;
+        try 
+        {
+            for (int tentativa = 0; tentativa < maximoTentativas; tentativa++) 
+            {
+                // verificar se é mais que uma entrada
+                if (!posicoes.matches("(\\(\\d{1},\\d{1}\\))+$")) 
+                {
+                    System.out.println("Tentativa " + (tentativa + 1) + " falhou. Formato inválido.");
+                    // Mensagem para o usuário tentar novamente
+                    System.out.println("Tentativa " + (tentativa + 1) + " falhou. Formato inválido! Tente novamente.");
+                    System.out.print("Digite a posição para remover (linha,coluna): ");
+                    posicoes = new Scanner(System.in).nextLine();
+                    continue; // Continua o loop e permite uma nova tentativa
+                }
+
+                // se +1 jogada adiciona parênteses em torno dela para unificar o formato
+                if (!posicoes.startsWith("("))
+                    posicoes = "(" + posicoes + ")";               
+
+                String[] jogadas = posicoes.split("\\)\\(");
+
+                for (int i = 0; i < jogadas.length; i++)                
+                    jogadas[i] = jogadas[i].replace("(", "").replace(")", "");
+                              
+                for (String jogadaIndividual : jogadas) 
+                {
+                    String[] partes = jogadaIndividual.split(",");
+
+                    int linha = Integer.parseInt(partes[0]);
+                    int coluna = Integer.parseInt(partes[1]);
+                    
+                    if (estaDentroDosLimites(linha, coluna)) 
+                    {
+                        System.out.println("Tentativa " + (tentativa + 1) + " falhou. Valores fora do intervalo.");
+                        continue;
+                    }
+                    
+                    if (origemValores[linha - 1][coluna - 1] != null && origemValores[linha - 1][coluna - 1].equals("automatico"))
+                    {
+                        System.out.printf("Tentativa %d falhou. Não é possível remover o valor na posição (%d,%d), inserido automaticamente.%n", tentativa + 1, linha, coluna);
+                        continue;
+                    } 
+                    else if (tabuleiro[linha - 1][coluna - 1] == 0) // posição vazia
+                    {                      
+                        System.out.printf("Tentativa %d falhou. Não há jogada para remover na posição (%d,%d).%n", tentativa + 1, linha, coluna);
+                        continue;
+                    }
+                 
+                    removerJogada(linha, coluna);
+                }
+
+                return;
+            }
+
+            throw new IllegalArgumentException("Número máximo de tentativas atingido. Não foi possível remover a jogada.");
+        } 
+        catch (IllegalArgumentException e) 
+        {
+            throw e;
+        }
+    }
+    
+    public String verificarJogo() 
+    {
+        StringBuilder relatorio = new StringBuilder();
+        boolean jogoValido = true;
+
+        for (int i = 0; i < 9; i++) 
+        {
+            if (!verificarLinha(i)) 
+            {
+                jogoValido = false;
+                relatorio.append(String.format("A linha %d contém números duplicados ou inválidos.%n", i + 1));
+            }
         }
 
-        try {
-            int[] coordenadas = parsePosicao(posicao);
+        for (int j = 0; j < 9; j++) 
+        {
+            if (!verificarColuna(j)) 
+            {
+                jogoValido = false;
+                relatorio.append(String.format("A coluna %d contém números duplicados ou inválidos.%n", j + 1));
+            }
+        }
+
+        for (int linha = 0; linha < 9; linha += 3) 
+        {
+            for (int coluna = 0; coluna < 9; coluna += 3) 
+            {
+                if (!verificarSubgrade(linha, coluna)) 
+                {
+                    jogoValido = false;
+                    relatorio.append(String.format(
+                            "A subgrade começando na posição (%d,%d) contém números duplicados ou inválidos.%n",
+                            linha + 1, coluna + 1));
+                }
+            }
+        }
+
+        if (jogoValido) 
+        {
+            return "O jogo está correto até o momento.";
+        } 
+        else 
+        {
+            return relatorio.toString();
+        }
+    }
+    
+    protected void adicionarJogada(String jogada)
+    {
+        int maximoTentativas = Constants.MAX_TENTATIVAS;
+        try 
+        {
+            for (int tentativa = 0; tentativa < maximoTentativas; tentativa++) 
+            {
+                if (!jogada.matches("(\\(\\d{1},\\d{1},\\d{1}\\))+$")) 
+                {
+                    System.out.println("Tentativa " + (tentativa + 1) + " falhou. Formato inválido.");
+                    continue;
+                }
+
+                if (!jogada.startsWith("("))                
+                    jogada = "(" + jogada + ")";
+
+                String[] jogadas = jogada.split("\\)\\(");
+               
+                for (int i = 0; i < jogadas.length; i++)                
+                    jogadas[i] = jogadas[i].replace("(", "").replace(")", "");
+                               
+                for (String jogadaIndividual : jogadas) 
+                {
+                    String[] valores = jogadaIndividual.split(",");
+
+                    int linha = Integer.parseInt(valores[0]); 
+                    int coluna = Integer.parseInt(valores[1]); 
+                    int valor = Integer.parseInt(valores[2]);
+
+                    if (estaDentroDosLimites(linha, coluna, valor))
+                    {
+                        System.out.println("Tentativa " + (tentativa + 1) + " falhou. Valores fora do intervalo.");
+                        continue;
+                    }
+
+                    if (posicaoEstaPreenchida(linha - 1, coluna - 1)) 
+                    { 
+                        System.out.printf("Tentativa %d falhou. A posição (%d,%d,%d) já está preenchida.%n", tentativa + 1, linha, coluna, valor);
+                        continue;
+                    }
+
+                    inserirValorTabuleiro(linha - 1, coluna - 1, valor);
+                }
+
+                imprimirTabuleiro();
+                return;
+            }
+
+            throw new IllegalArgumentException("Número máximo de tentativas atingido. Não foi possível inserir a jogada.");
+        } 
+        catch (IllegalArgumentException e)
+        {
+            throw e;
+        }
+    }
+
+    protected String darDica(String posicao) 
+    {
+        try 
+        {
+            if (posicao == null || posicao.isBlank()) // validando se a posição é válida  
+                return "Posição inválida. Use o formato (linha,coluna).";
+        
+            int[] coordenadas = posicaoEhValida(posicao);
             int linha = coordenadas[0];
             int coluna = coordenadas[1];
 
-            if (tabuleiro[linha][coluna] != 0) {
+            if (tabuleiro[linha][coluna] != 0) // validando se a posição já possui um valor   
                 return String.format("A posição (%d,%d) já possui um valor.", linha + 1, coluna + 1);
-            }
-
+            
             String valoresPossiveis = obterValoresPossiveis(linha, coluna);
             return valoresPossiveis.isEmpty()
                 ? String.format("Nenhum valor pode ser inserido na posição (%d,%d).", linha + 1, coluna + 1)
                 : "Valores possíveis: " + valoresPossiveis;
 
-        } catch (IllegalArgumentException e) {
-            return e.getMessage();
+        } 
+        catch (Exception e)
+        {
+            throw e;
         }
     }
-
-    private int[] parsePosicao(String posicao) {
-        try {
-            String[] valores = posicao.replace("(", "").replace(")", "").split(",");
-            if (valores.length != 2) {
-                throw new IllegalArgumentException("Formato inválido. Use o formato (linha,coluna).\nExemplo: (3,4)");
-            }
-
-            int linha = Integer.parseInt(valores[0].trim()) - 1;
-            int coluna = Integer.parseInt(valores[1].trim()) - 1;
-
-            if (linha < 0 || linha >= TAMANHO || coluna < 0 || coluna >= TAMANHO) {
-                throw new IllegalArgumentException("Posição fora dos limites do tabuleiro. Valores devem estar entre 1 e 9.");
-            }
-
-            return new int[]{linha, coluna};
-
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Formato inválido. Use números inteiros no formato (linha,coluna).", e);
-        }
-    }
-
-    private String obterValoresPossiveis(int linha, int coluna) {
-        StringBuilder valoresPossiveis = new StringBuilder();
-
-        for (int valor = 1; valor <= TAMANHO; valor++) {
-            if (ehPossivelInserir(linha, coluna, valor)) {
-                if (valoresPossiveis.length() > 0) {
-                    valoresPossiveis.append(", ");
-                }
-                valoresPossiveis.append(valor);
-            }
-        }
-
-        return valoresPossiveis.toString();
-    }
-
-    private boolean ehPossivelInserir(int linha, int coluna, int valor) {
-        // Verifica linha e coluna simultaneamente
-        for (int i = 0; i < TAMANHO; i++) {
-            if (tabuleiro[linha][i] == valor || tabuleiro[i][coluna] == valor) {
-                return false;
-            }
-        }
-
-        // Verifica a subgrade 3x3
-        int linhaInicio = (linha / 3) * 3;
-        int colunaInicio = (coluna / 3) * 3;
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (tabuleiro[linhaInicio + i][colunaInicio + j] == valor) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
+    // </editor-fold>
 }
 

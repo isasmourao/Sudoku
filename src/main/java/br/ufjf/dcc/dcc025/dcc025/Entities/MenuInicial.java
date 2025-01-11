@@ -26,7 +26,7 @@ public class MenuInicial implements MenuIInicialnterface
         try
         {
             gerarMenuOpcoesUsuario();
-
+            
             int opcaoEscolhidaUsuario = scanner.nextInt();
             if (!verificarOpcaoEscolhidaEhValida(opcaoEscolhidaUsuario) )
             {
@@ -70,7 +70,8 @@ public class MenuInicial implements MenuIInicialnterface
                            1. Gerar um jogo aleatório.
                            2. Definir o próprio jogo.
                            3. Sair.
-                           """);        
+                           """);
+        System.out.print(">> ");
     }
     
     private void gerarMensagemOpcaoInvalidaTenteNovamente(int tentativa)
