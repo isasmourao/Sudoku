@@ -1,8 +1,9 @@
 package br.ufjf.dcc.dcc025.dcc025.Entities;
-import br.ufjf.dcc.dcc025.dcc025.Entities.Interfaces.MenuInterface;
+import br.ufjf.dcc.dcc025.dcc025.Constants.Constants;
 import java.util.Scanner;
+import br.ufjf.dcc.dcc025.dcc025.Entities.Interfaces.MenuIInicialnterface;
 
-public class Menu implements MenuInterface 
+public class MenuInicial implements MenuIInicialnterface 
 {
     @Override
     public void executarMensagemInicial()
@@ -16,11 +17,10 @@ public class Menu implements MenuInterface
                            2. Não repetir números na vertical (colunas).
                            3. Não repetir números nos quadrados de tamanho 3x3.
                            ===================================================""");
-
     }
     
     @Override
-    public int solicitarEscolhaUsuario  ()
+    public int solicitarEscolhaUsuario()
     {
         Scanner scanner = new Scanner(System.in);
         try
@@ -30,7 +30,8 @@ public class Menu implements MenuInterface
             int opcaoEscolhidaUsuario = scanner.nextInt();
             if (!verificarOpcaoEscolhidaEhValida(opcaoEscolhidaUsuario) )
             {
-                for (int tentativa = 3; tentativa >= 1; tentativa--)
+                int tentativasMaximas = Constants.MAX_TENTATIVAS;
+                for (int tentativa = 3; tentativa >= tentativasMaximas; tentativa--)
                 {
                     gerarMensagemOpcaoInvalidaTenteNovamente(tentativa);
                     gerarMenuOpcoesUsuario();
@@ -83,5 +84,5 @@ public class Menu implements MenuInterface
     {
         System.out.println("""
                     >> Finalizando o programa!"""); 
-    }
+    }  
 }

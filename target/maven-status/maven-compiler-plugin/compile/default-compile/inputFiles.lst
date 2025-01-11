@@ -1,3 +1,9 @@
 C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\DCC025.java
-C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\IMenu.java
-C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\Menu.java
+C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\Entities\Menu.java
+C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\Entities\JogoAleatorio.java
+C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\Entities\Interfaces\Jogo.java
+C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\Entities\JogoSudoku.java
+C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\Exceptions\TentativasExcedidasException.java
+C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\Constants\Constants.java
+C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\Entities\Interfaces\MenuInterface.java
+C:\Users\isabe\source\repos\Sudoku\DCC025\src\main\java\br\ufjf\dcc\dcc025\dcc025\Entities\JogoPersonalizado.java

@@ -10,6 +10,6 @@ package br.ufjf.dcc.dcc025.dcc025.Entities.Interfaces;
  */
 public interface Jogo
 {
-    int quantidadeNumerosUsuarioDesejaSortear();
     void criarJogo();
+    void IniciarJogo();
 }

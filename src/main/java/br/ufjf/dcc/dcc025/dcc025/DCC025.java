@@ -1,15 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package br.ufjf.dcc.dcc025.dcc025;
 
 import br.ufjf.dcc.dcc025.dcc025.Entities.JogoAleatorio;
-import br.ufjf.dcc.dcc025.dcc025.Entities.Menu;
+import br.ufjf.dcc.dcc025.dcc025.Entities.JogoPersonalizado;
+import br.ufjf.dcc.dcc025.dcc025.Entities.JogoSudoku;
+import br.ufjf.dcc.dcc025.dcc025.Entities.MenuInicial;
 
 /**
- *
- * @author Isabella Dias
+ * @author Isabella Mourão dos Santos Dias
  */
 public class DCC025 
 {
@@ -19,22 +16,22 @@ public class DCC025
         
         try
         {
-            Menu menu = new Menu();
+            MenuInicial menu = new MenuInicial();
             menu.executarMensagemInicial();
             int escolhaUsuario = menu.solicitarEscolhaUsuario();
             
+            JogoSudoku jogo = null;
             switch(escolhaUsuario)
             {
                 case 1 -> 
                 {
                     System.out.println(">> Escolha do usuário: GERAR JOGO ALEATORIO");
-                    JogoAleatorio jogoAleatorio = new JogoAleatorio();
-                    jogoAleatorio.criarJogo();
+                    jogo = new JogoAleatorio();
                 }
                 case 2 ->
                 {
                     System.out.println(">> Escolha do usuário: DEFINIR O PRÓPRIO JOGO");
-                    // Definir o próprio jogo
+                    jogo = new JogoPersonalizado();
                 }
                 case 3 ->
                 {
@@ -42,7 +39,20 @@ public class DCC025
                     menu.gerarMensagemSair();
                     return;
                 }
+                default -> 
+                {
+                    System.out.println(">> Escolha inválida!");
+                    return;
+                }
             }
+            
+            if (jogo != null)
+            {
+                jogo.criarJogo();
+                jogo.IniciarJogo();
+            }
+            else
+                throw new Exception(" ### Não foi possível criar o jogo, por favor inicie novamente! ###");
         }
         catch(IllegalArgumentException e)
         {
@@ -50,8 +60,7 @@ public class DCC025
         }
         catch(Exception e)
         {
-        
-        }
-
+            System.out.println(e.getMessage()); 
+        }      
     }
 }
