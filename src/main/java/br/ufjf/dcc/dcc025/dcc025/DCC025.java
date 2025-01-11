@@ -4,6 +4,9 @@
 
 package br.ufjf.dcc.dcc025.dcc025;
 
+import br.ufjf.dcc.dcc025.dcc025.Entities.JogoAleatorio;
+import br.ufjf.dcc.dcc025.dcc025.Entities.Menu;
+
 /**
  *
  * @author Isabella Dias
@@ -19,20 +22,25 @@ public class DCC025
             Menu menu = new Menu();
             menu.executarMensagemInicial();
             int escolhaUsuario = menu.solicitarEscolhaUsuario();
-
+            
             switch(escolhaUsuario)
             {
                 case 1 -> 
                 {
-                    // GeraJogoAleatorio
+                    System.out.println(">> Escolha do usuário: GERAR JOGO ALEATORIO");
+                    JogoAleatorio jogoAleatorio = new JogoAleatorio();
+                    jogoAleatorio.criarJogo();
                 }
                 case 2 ->
                 {
+                    System.out.println(">> Escolha do usuário: DEFINIR O PRÓPRIO JOGO");
                     // Definir o próprio jogo
                 }
                 case 3 ->
                 {
-                    // Sair
+                    System.out.println(">> Escolha do usuário: SAIR");
+                    menu.gerarMensagemSair();
+                    return;
                 }
             }
         }

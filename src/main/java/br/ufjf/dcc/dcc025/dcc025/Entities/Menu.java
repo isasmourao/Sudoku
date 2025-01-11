@@ -1,7 +1,8 @@
-package br.ufjf.dcc.dcc025.dcc025;
+package br.ufjf.dcc.dcc025.dcc025.Entities;
+import br.ufjf.dcc.dcc025.dcc025.Entities.Interfaces.MenuInterface;
 import java.util.Scanner;
 
-public class Menu implements IMenu 
+public class Menu implements MenuInterface 
 {
     @Override
     public void executarMensagemInicial()
@@ -19,7 +20,7 @@ public class Menu implements IMenu
     }
     
     @Override
-    public int solicitarEscolhaUsuario()
+    public int solicitarEscolhaUsuario  ()
     {
         Scanner scanner = new Scanner(System.in);
         try
@@ -27,7 +28,7 @@ public class Menu implements IMenu
             gerarMenuOpcoesUsuario();
 
             int opcaoEscolhidaUsuario = scanner.nextInt();
-            if (!verificarOpcaoEscolhidaEhValida(opcaoEscolhidaUsuario))
+            if (!verificarOpcaoEscolhidaEhValida(opcaoEscolhidaUsuario) )
             {
                 for (int tentativa = 3; tentativa >= 1; tentativa--)
                 {
@@ -38,15 +39,18 @@ public class Menu implements IMenu
                     if (verificarOpcaoEscolhidaEhValida(opcaoEscolhidaUsuario))
                         break;
 
-                    if (tentativa == 1) // Criar uma exception própria
+                    if (tentativa == 1)
                         throw new IllegalArgumentException("Número de tentativas excedido. Programa será finalizado!");                    
                 }
             }
 
-            scanner.close();
             return opcaoEscolhidaUsuario;
         }
         catch (IllegalArgumentException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
         {
             throw e;
         }
@@ -73,5 +77,11 @@ public class Menu implements IMenu
         System.out.println("""
                     >> Opção selecionada inválida! Por favor, tente novamente
                     - Tentativa 1 de """ + tentativa); 
+    }
+    
+    public void gerarMensagemSair()
+    {
+        System.out.println("""
+                    >> Finalizando o programa!"""); 
     }
 }

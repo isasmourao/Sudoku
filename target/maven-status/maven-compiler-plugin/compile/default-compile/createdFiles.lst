@@ -1,3 +1,7 @@
-br\ufjf\dcc\dcc025\dcc025\Menu.class
+br\ufjf\dcc\dcc025\dcc025\Entities\JogoAleatorio.class
+br\ufjf\dcc\dcc025\dcc025\Entities\Interfaces\MenuInterface.class
+br\ufjf\dcc\dcc025\dcc025\Entities\JogoSudoku.class
+br\ufjf\dcc\dcc025\dcc025\Exceptions\TentativasExcedidasException.class
+br\ufjf\dcc\dcc025\dcc025\Entities\Menu.class
 br\ufjf\dcc\dcc025\dcc025\DCC025.class
-br\ufjf\dcc\dcc025\dcc025\IMenu.class
+br\ufjf\dcc\dcc025\dcc025\Entities\Interfaces\Jogo.class
