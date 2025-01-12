@@ -28,6 +28,24 @@ public class JogoAleatorio extends JogoSudoku
         }
     }
     
+    @Override
+    public void IniciarJogo() 
+    {
+        try
+        {
+            iniciarJogo();     
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+    }
+    
+    // <editor-fold desc="Métodos Auxiliares">
     private int quantidadeNumerosUsuarioDesejaSortear(Scanner scanner) 
     {
         System.out.println("""
@@ -96,22 +114,10 @@ public class JogoAleatorio extends JogoSudoku
             if (tabuleiro[linha][coluna] == 0 && podeInserirNumero(linha, coluna, numero)) 
             {
                 tabuleiro[linha][coluna] = numero;
-                origemValores[linha][coluna] = "automaticamente"; // só vou poder remover os manuais
+                origemValores[linha][coluna] = "automatico";
                 preenchidos++;
             }
         }
     }
-
-    @Override
-    public void IniciarJogo() 
-    {
-        try
-        {
-            iniciarJogo();     
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-    }
+    // </editor-fold>
 }

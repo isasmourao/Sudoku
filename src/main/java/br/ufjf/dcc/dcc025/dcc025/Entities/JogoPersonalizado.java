@@ -136,10 +136,9 @@ public class JogoPersonalizado extends JogoSudoku
     
     private boolean valoresSaoValidos(int linha, int coluna, int valor)
     {
-        // Verifica se os índices estão no intervalo válido para o Sudoku
-        if (linha < 0 || linha >= 9 || coluna < 0 || coluna >= 9 || valor < 1 || valor > 9) {
+        if (linha < 0 || linha >= 9 || coluna < 0 || coluna >= 9 || valor < 1 || valor > 9)
             return false;
-        }
+        
         // Verifica se a posição no tabuleiro está vazia
         return tabuleiro[linha][coluna] == 0;
     }
@@ -151,7 +150,7 @@ public class JogoPersonalizado extends JogoSudoku
         {
             iniciarJogo();     
         }
-        catch (Exception e)
+        catch (IllegalArgumentException e)
         {
             throw e;
         }

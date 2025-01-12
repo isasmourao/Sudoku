@@ -2,10 +2,10 @@ package br.ufjf.dcc.dcc025.dcc025.Entities;
 
 import br.ufjf.dcc.dcc025.dcc025.Constants.Constants;
 import static br.ufjf.dcc.dcc025.dcc025.Constants.Constants.TAMANHO;
-import br.ufjf.dcc.dcc025.dcc025.Entities.Interfaces.Jogo;
 import java.util.Scanner;
+import br.ufjf.dcc.dcc025.dcc025.Entities.Interfaces.JogoInterface;
 
-public abstract class JogoSudoku implements Jogo {
+public abstract class JogoSudoku implements JogoInterface {
 
     protected String[][] origemValores = new String[TAMANHO][TAMANHO];
     protected int[][] tabuleiro = new int[TAMANHO][TAMANHO];
@@ -80,6 +80,11 @@ public abstract class JogoSudoku implements Jogo {
                 default -> System.out.println(" ### Opção inválida. Tente novamente. ###");
             }           
             
+            if (jogoEstaCorreto())
+            {
+                gerarMensagemVitoria();
+            }
+            
             if (jogoEstaCompleto()) {
                 System.out.println(" ########### Parabéns! Você completou o jogo.  ###########");
             }
@@ -133,6 +138,27 @@ public abstract class JogoSudoku implements Jogo {
                            """);
     }
     
+    private void gerarMensagemVitoria() 
+    {
+        System.out.println("""
+                           ===================================================
+                                        PARABÉNS VOCÊ VENCEU!!
+                           ===================================================
+                           """);
+    }
+    
+    public void reiniciarTabuleiro() 
+    {
+        for (int i = 0; i < TAMANHO; i++) 
+        {
+            for (int j = 0; j < TAMANHO; j++) 
+            {
+                tabuleiro[i][j] = 0; 
+                origemValores[i][j] = null;
+            }
+        }
+    }
+        
     private boolean verificarLinha(int linha) 
     {
         boolean[] numeros = new boolean[9];
@@ -277,6 +303,10 @@ public abstract class JogoSudoku implements Jogo {
                 
                 valoresPossiveis.append(valor);
             }
+            else
+            {
+                System.out.printf("Não é possível inserir %d na posição (%d,%d).%n", valor, linha + 1, coluna + 1);
+            }
         }
         return valoresPossiveis.toString();
     }
@@ -287,6 +317,28 @@ public abstract class JogoSudoku implements Jogo {
         origemValores[linha - 1][coluna - 1] = null; 
         System.out.printf("Jogada removida da posição (%d,%d).%n", linha, coluna);
     }
+    
+    private boolean jogoEstaCorreto() 
+    {
+        if (!jogoEstaCompleto())
+            return false;
+        
+        for (int i = 0; i < 9; i++) 
+            if (!verificarLinha(i))            
+                return false;
+
+        for (int j = 0; j < 9; j++)
+            if (!verificarColuna(j))
+                return false;          
+        
+        for (int linha = 0; linha < 9; linha += 3)
+            for (int coluna = 0; coluna < 9; coluna += 3)
+                if (!verificarSubgrade(linha, coluna))
+                    return false;                                  
+
+        return true;
+    }
+
     // </editor-fold>
     
     // <editor-fold desc="Métodos Menu">
@@ -316,12 +368,10 @@ public abstract class JogoSudoku implements Jogo {
                 // verificar se é mais que uma entrada
                 if (!posicoes.matches("(\\(\\d{1},\\d{1}\\))+$")) 
                 {
-                    System.out.println("Tentativa " + (tentativa + 1) + " falhou. Formato inválido.");
-                    // Mensagem para o usuário tentar novamente
                     System.out.println("Tentativa " + (tentativa + 1) + " falhou. Formato inválido! Tente novamente.");
-                    System.out.print("Digite a posição para remover (linha,coluna): ");
+                    System.out.print(">> Digite a posição para remover (linha,coluna): ");
                     posicoes = new Scanner(System.in).nextLine();
-                    continue; // Continua o loop e permite uma nova tentativa
+                    continue;
                 }
 
                 // se +1 jogada adiciona parênteses em torno dela para unificar o formato
@@ -462,7 +512,6 @@ public abstract class JogoSudoku implements Jogo {
                     inserirValorTabuleiro(linha - 1, coluna - 1, valor);
                 }
 
-                imprimirTabuleiro();
                 return;
             }
 

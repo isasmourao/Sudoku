@@ -12,53 +12,61 @@ public class DCC025
 {
     public static void main(String[] args) 
     {
-        try
+        boolean continuar = true;
+        
+        while (continuar) 
         {
-            MenuInicial menu = new MenuInicial();
-            menu.executarMensagemInicial();
-            int escolhaUsuario = menu.solicitarEscolhaUsuario();
-            
-            JogoSudoku jogo = null;
-            switch(escolhaUsuario)
+            try
             {
-                case 1 -> 
+                MenuInicial menu = new MenuInicial();
+                menu.executarMensagemInicial();
+                int escolhaUsuario = menu.solicitarEscolhaUsuario();
+
+                JogoSudoku jogo = null;
+                switch(escolhaUsuario)
                 {
-                    System.out.println(">> Escolha do usuário: GERAR JOGO ALEATORIO");
-                    jogo = new JogoAleatorio();
+                    case 1 -> 
+                    {
+                        System.out.println(">> Escolha do usuário: GERAR JOGO ALEATORIO");
+                        jogo = new JogoAleatorio();
+                    }
+                    case 2 ->
+                    {
+                        System.out.println(">> Escolha do usuário: DEFINIR O PRÓPRIO JOGO");
+                        jogo = new JogoPersonalizado();
+                    }
+                    case 3 ->
+                    {
+                        System.out.println(">> Escolha do usuário: SAIR");
+                        menu.gerarMensagemSair();
+                        return;
+                    }
+                    default -> 
+                    {
+                        System.out.println(">> Escolha inválida!");
+                        return;
+                    }
                 }
-                case 2 ->
+
+                if (jogo != null)
                 {
-                    System.out.println(">> Escolha do usuário: DEFINIR O PRÓPRIO JOGO");
-                    jogo = new JogoPersonalizado();
+                    jogo.criarJogo();
+                    jogo.IniciarJogo();
+                    jogo.reiniciarTabuleiro();
+                    
+                    continuar = menu.desejaJogarNovamente();
                 }
-                case 3 ->
-                {
-                    System.out.println(">> Escolha do usuário: SAIR");
-                    menu.gerarMensagemSair();
-                    return;
-                }
-                default -> 
-                {
-                    System.out.println(">> Escolha inválida!");
-                    return;
-                }
+                else
+                    throw new Exception(" ### Não foi possível criar o jogo, por favor inicie novamente! ###");
             }
-            
-            if (jogo != null)
+            catch(IllegalArgumentException e)
             {
-                jogo.criarJogo();
-                jogo.IniciarJogo();
+                System.out.println(e.getMessage());        
             }
-            else
-                throw new Exception(" ### Não foi possível criar o jogo, por favor inicie novamente! ###");
+            catch(Exception e)
+            {
+                System.out.println(e.getMessage()); 
+            }  
         }
-        catch(IllegalArgumentException e)
-        {
-            System.out.println(e.getMessage());        
-        }
-        catch(Exception e)
-        {
-            System.out.println(e.getMessage()); 
-        }      
     }
 }

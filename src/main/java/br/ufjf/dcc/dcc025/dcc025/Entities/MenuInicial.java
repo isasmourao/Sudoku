@@ -1,9 +1,9 @@
 package br.ufjf.dcc.dcc025.dcc025.Entities;
 import br.ufjf.dcc.dcc025.dcc025.Constants.Constants;
 import java.util.Scanner;
-import br.ufjf.dcc.dcc025.dcc025.Entities.Interfaces.MenuIInicialnterface;
+import br.ufjf.dcc.dcc025.dcc025.Entities.Interfaces.Menulnterface;
 
-public class MenuInicial implements MenuIInicialnterface 
+public class MenuInicial implements Menulnterface 
 {
     @Override
     public void executarMensagemInicial()
@@ -85,5 +85,29 @@ public class MenuInicial implements MenuIInicialnterface
     {
         System.out.println("""
                     >> Finalizando o programa!"""); 
-    }  
+    } 
+    
+    public boolean desejaJogarNovamente() 
+    {
+        System.out.println("""
+                           ===================================================
+                                        Deseja jogar novamente?
+                                        1. Sim
+                                        2. Não
+                           ===================================================
+                           """);
+        
+        System.out.print(">> ");
+        Scanner scanner = new Scanner(System.in);
+        int opcao = scanner.nextInt();
+        scanner.nextLine();
+
+        if (opcao == 1)              
+            return true;        
+        else 
+        {
+            System.out.println("Obrigado por jogar! Até a próxima :D");
+            return false;
+        }
+    }
 }
